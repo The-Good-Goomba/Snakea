@@ -22,6 +22,7 @@ class Level1: Scene
         addCamera(cam)
         addChild(planet)
         addChild(cactus)
+        cactus.setUniformScale(0.3)
     }
     
     override func doUpdate() {

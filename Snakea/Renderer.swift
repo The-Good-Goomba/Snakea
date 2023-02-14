@@ -37,15 +37,17 @@ extension Renderer: MTKViewDelegate
     
     func draw(in view: MTKView) {
         
-        
-   
+//        let captureDescriptor = MTLCaptureDescriptor()
+//        captureDescriptor.captureObject = Engine.
+//        destination is developerTools by default
+//        try? MTLCaptureManager.shared().startCapture(with: captureDescriptor)
+
         
         SceneManager.doUpdate( view: view, deltaTime: 1 / Float(view.preferredFramesPerSecond))
         
-   
-        
-        
-        
+//        if MTLCaptureManager.shared().isCapturing {
+//                MTLCaptureManager.shared().stopCapture()
+//            }
         
     }
 }

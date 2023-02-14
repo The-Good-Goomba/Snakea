@@ -39,8 +39,8 @@ kernel void vertexModifiers(constant Vertex *vertices [[ buffer(0) ]],
     }
     
 //    Since the acceleration structure moves things already
-    outputPos[vid] = position.xyz;
-//    outputPos[vid] = (modelConstants.modelMatrix * position).xyz;
+//    outputPos[vid] = position.xyz;
+    outputPos[vid] = (modelConstants.modelMatrix * position).xyz;
     outputNorm[vid] = modelConstants.normalMatrix * normal.xyz;
     
     return;

@@ -27,7 +27,9 @@ class GameObject: Apex
     var submeshBuffer: MTLBuffer!
     
     var jointMatrices: [float4x4] = []
-    var vertexCount: Int!
+    var vertexCount: Int {
+        return Int(shaderMesh.vertexCount)
+    }
     
     var shaderMesh: ShaderMesh = ShaderMesh()
     
@@ -78,7 +80,7 @@ class GameObject: Apex
         
         if (jointMatrices.count == 0) { jointMatrices.append(.identity()) }
         
-        self.vertexCount = vertices.count
+        self.shaderMesh.vertexCount = UInt32(vertices.count)
         self.normalBuffer = Engine.Device.makeBuffer(length: SIMD3<Float>.stride(vertexCount))
         normalBuffer.label = name + " Normal Buffer"
         self.modifiedVertexBuffer = Engine.Device.makeBuffer(length: SIMD3<Float>.stride(vertexCount))

@@ -59,58 +59,66 @@ kernel void shadeKernel(uint2 tid [[thread_position_in_grid]],
         
         // 1
         if (ray.maxDistance >= 0.0 && intersection.distance >= 0.0) {
+
+            ShaderMesh mesh = meshes[intersection.instanceIndex];
+
+            
+//            uint i = 0;
 //
-//            ShaderMesh mesh = meshes[intersection.instanceIndex];
-//
-//            uint offset = 0;
-//            int i = -1;
-//            while (intersection.primitiveIndex * 3 >= offset)
+//            while (i < intersection.instanceIndex)
 //            {
+//                intersection.primitiveIndex -= (meshes[i].vertexCount / 3.0 );
 //                i++;
-//                offset += mesh.submeshes[i].bufferLength;
 //            }
 //
-//            float3 intersectionPoint = ray.origin + ray.direction * intersection.distance;
-//            float3 surfaceNormal = interpolateVertexAttribute(mesh.normals,intersection);
-//            surfaceNormal = normalize(surfaceNormal);
-//            // 2
-//            float2 r = random[(tid.y % 16) * 16 + (tid.x % 16)];
-//            float3 lightDirection;
-//            float3 lightColor;
-//            float lightDistance;
-//            sampleAreaLight(uniforms.light, r, intersectionPoint, lightDirection, lightColor, lightDistance);
-//            lightColor *= saturate(dot(surfaceNormal, lightDirection));
-//
-//            VertexColourData bruh = interpolateVertexColourData(mesh.generics, intersection);
-//
-//
-//            float2 baseUV = float2(bruh.uv.x, bruh.uv.y);
-//            float2 d;
-//            baseUV = modf(baseUV, d);
-//            if ( baseUV.x < 0)
-//                baseUV.x += 1;
-//            if ( baseUV.y < 0)
-//                baseUV.y += 1;
-//
-//            ushort2 colourUV = ushort2((baseUV * textureData[mesh.submeshes[i].colourTextureIndex].size) + textureData[mesh.submeshes[i].colourTextureIndex].offset);
-//
-////            ushort2 colourUV = ushort2(50,50);
-//
-//            colour *= textureAtlas.read(colourUV).xyz;
-//
-//
-//            shadowRay.origin = intersectionPoint + surfaceNormal * 1e-3;
-//            shadowRay.direction = lightDirection;
-//            shadowRay.maxDistance = lightDistance - 1e-3;
-//            shadowRay.colour = half3(lightColor) * colour;
-//
-//            float3 sampleDirection = sampleCosineWeightedHemisphere(r);
-//            sampleDirection = alignHemisphereWithNormal(sampleDirection,
-//                                                        surfaceNormal);
-//            ray.origin = intersectionPoint + surfaceNormal * 1e-3f;
-//            ray.direction = sampleDirection;
-//            ray.colour = colour;
-            ray.colour = half3(1.0,1.0,1.0);
+            
+            uint offset = 0;
+            uint i = 0;
+            while (intersection.primitiveIndex * 3 >= offset)
+            {
+                i++;
+                offset += mesh.submeshes[(i - 1)].bufferLength;
+            }
+            i--;
+            
+
+            float3 intersectionPoint = ray.origin + ray.direction * intersection.distance;
+            float3 surfaceNormal = interpolateVertexAttribute(mesh.normals,intersection);
+            surfaceNormal = normalize(surfaceNormal);
+            // 2
+            float2 r = random[(tid.y % 16) * 16 + (tid.x % 16)];
+            float3 lightDirection;
+            float3 lightColor;
+            float lightDistance;
+            sampleAreaLight(uniforms.light, r, intersectionPoint, lightDirection, lightColor, lightDistance);
+            lightColor *= saturate(dot(surfaceNormal, lightDirection));
+
+            VertexColourData bruh = interpolateVertexColourData(mesh.generics, intersection);
+
+
+            float2 baseUV = float2(bruh.uv.x, bruh.uv.y);
+            float2 d;
+            baseUV = modf(baseUV, d);
+            if ( baseUV.x < 0)
+                baseUV.x += 1;
+            if ( baseUV.y < 0)
+                baseUV.y += 1;
+
+            ushort2 colourUV = ushort2((baseUV * textureData[mesh.submeshes[i].colourTextureIndex].size) + textureData[mesh.submeshes[i].colourTextureIndex].offset);
+
+            colour *= textureAtlas.read(colourUV).xyz;
+
+            shadowRay.origin = intersectionPoint + surfaceNormal * 1e-3;
+            shadowRay.direction = lightDirection;
+            shadowRay.maxDistance = lightDistance - 1e-3;
+            shadowRay.colour = half3(lightColor) * colour;
+
+            float3 sampleDirection = sampleCosineWeightedHemisphere(r);
+            sampleDirection = alignHemisphereWithNormal(sampleDirection,
+                                                        surfaceNormal);
+            ray.origin = intersectionPoint + surfaceNormal * 1e-3f;
+            ray.direction = sampleDirection;
+            ray.colour = colour;
         }
         else {
           ray.maxDistance = -1.0;
@@ -127,13 +135,11 @@ kernel void shadowKernel(uint2 tid [[thread_position_in_grid]],
              texture2d<half, access::read_write> renderTarget)
 {
     if (tid.x < uniforms.width && tid.y < uniforms.height) {
-    
         unsigned int rayIdx = tid.y * uniforms.width + tid.x;
         device Ray & shadowRay = shadowRays[rayIdx];
         float intersectionDistance = intersections[rayIdx];
-
             if (shadowRay.maxDistance >= 0.0
-                  && intersectionDistance < 0.0) {
+                  && intersectionDistance <= 0.0) {
               half3 colour = shadowRay.colour;
               colour += renderTarget.read(tid).xyz;
               renderTarget.write(half4(colour, 1.0), tid);

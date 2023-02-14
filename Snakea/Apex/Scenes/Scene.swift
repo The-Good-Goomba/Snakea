@@ -78,7 +78,6 @@ class Scene: Apex
  
         let commandBuffer = Engine.CommandQueue.makeCommandBuffer()!
         modifyVertices(commandBuffer: commandBuffer)
-        commandBuffer.commit()
         commandBuffer.addCompletedHandler({ _ in
             self.generateChildrenContent()
             self.updateTransformBuffer()
@@ -87,11 +86,11 @@ class Scene: Apex
             self.buildIntersector()
             self.createAccelerationStructure()
             self.updateScreenSize()
+            self.semaphore.signal()
         })
+        semaphore.wait()
+        commandBuffer.commit()
         
-        
-        
-     
     }
     
     func buildScene() { }
@@ -134,24 +133,6 @@ class Scene: Apex
     
     }
     
-    func updateTransformBuffer()
-    {
-        transformBuffer = Engine.Device.makeBuffer(length: float4x4.stride(gameObjectCount))
-        let transformArray = transformBuffer.contents().bindMemory(to: float4x4.self, capacity: gameObjectCount)
-        
-        var i = 0
-        for child in children
-        {
-            if child is GameObject
-            {
-                transformArray[i] = child.modelMatrix
-                i += 1
-            }
-        }
-        
-        transformBuffer.label = "Transform Vertices"
-    }
-    
     func generateChildrenContent()
     {
         self.meshBuffer = Engine.Device.makeBuffer(length: MemoryLayout<ShaderMesh>.stride * gameObjectCount)
@@ -175,7 +156,6 @@ class Scene: Apex
                         print(info)
                         infoArray.append(info)
                     }
-                    
                 }
                 
                 
@@ -228,31 +208,13 @@ class Scene: Apex
         }
         
         self.accelerationStructure = MPSInstanceAccelerationStructure(group: group)
+        
         self.accelerationStructure.instanceCount = gameObjectCount
         self.accelerationStructure.transformBuffer = transformBuffer
         self.accelerationStructure.instanceBuffer = _instanceBuffer
+        self.accelerationStructure.usage = .frequentRebuild
         self.accelerationStructure.accelerationStructures = triangleAccelerationStrutures
         
-    }
-    
-    func rebuildAccelerationStructure(commandBuffer: MTLCommandBuffer, completeHandler: @escaping  () -> Void)
-    {
-        updateTransformBuffer()
-        modifyVertices(commandBuffer: commandBuffer)
-        
-        commandBuffer.addCompletedHandler({ _ in
-            for child in self.children
-            {
-                if let obj = child as? GameObject
-                {
-                    obj._accelerationStructure.vertexBuffer = self._vertexBuffer
-                }
-            }
-            
-            self.accelerationStructure.rebuild()
-            completeHandler()
-            self.semaphore.signal()
-        })
     }
     
     func updateScreenSize()
@@ -341,49 +303,7 @@ class Scene: Apex
         self.sceneConstants.totalGameTime = GameTime.TotalGameTime
     }
     
-    func updateCameras()
-    {
-        cameraManager.update()
-    }
-    
-    func updateRayData()
-    {
-        rayDataBufferOffset = alignedRayDataSize * rayDataBufferIndex
-        let pointer = rayDataBuffer!.contents().advanced(by: rayDataBufferOffset)
-        let uniforms = pointer.bindMemory(to: RayData.self, capacity: 1)
-        
-        var camera = CameraToShader()
-//        camera.position = cameraManager.currentCamera.getPosition()
-        camera.position = SIMD3<Float>(0.0, 0.0, 80.0)
-        camera.forward = SIMD3<Float>(0.0, 0.0, -1.0)
-        camera.right = SIMD3<Float>(1.0, 0.0, 0.0)
-        camera.up = SIMD3<Float>(0.0, 1.0, 0.0)
-        
-        let fieldOfView = 45.0 * (Float.pi / 180.0)
-        let aspectRatio = Renderer.AspectRatio
-        let imagePlaneHeight = tanf(fieldOfView / 2.0)
-        let imagePlaneWidth = aspectRatio * imagePlaneHeight
-        
-        camera.right *= imagePlaneWidth
-        camera.up *= imagePlaneHeight
-        
-        var light = AreaLight()
-        light.position = SIMD3<Float>(40.0, 40.0, 40.0)
-        light.forward = SIMD3<Float>(0.0, -1.0, 0.0)
-        light.right = SIMD3<Float>(0.25, 0.0, 0.0)
-        light.up = SIMD3<Float>(0.0, 0.0, 0.25)
-        light.color = SIMD3<Float>(repeating: 10000)
-        
-        uniforms.pointee.camera = camera
-        uniforms.pointee.light = light
-        
-        uniforms.pointee.width = uint(Renderer.ScreenSize.x)
-        uniforms.pointee.height = uint(Renderer.ScreenSize.y)
-        uniforms.pointee.blocksWide = ((uniforms.pointee.width) + 15) / 16
-        uniforms.pointee.frameIndex = frameIndex
-        frameIndex += 1
-    }
-    
+
     func updateRandomBuffer()
     {
         randomBufferOffset = 256 * SIMD2<Float>.stride * rayDataBufferIndex
@@ -432,6 +352,70 @@ class Scene: Apex
         }
     }
     
+    func updateCameras()
+    {
+        cameraManager.update()
+    }
+    
+    func updateRayData()
+    {
+        frameIndex = 0
+        rayDataBufferOffset = alignedRayDataSize * rayDataBufferIndex
+        let pointer = rayDataBuffer!.contents().advanced(by: rayDataBufferOffset)
+        let uniforms = pointer.bindMemory(to: RayData.self, capacity: 1)
+        
+        var camera = CameraToShader()
+//        camera.position = cameraManager.currentCamera.getPosition()
+        camera.position = SIMD3<Float>(0.0, 0.0, 80.0)
+        camera.forward = SIMD3<Float>(0.0, 0.0, -1.0)
+        camera.right = SIMD3<Float>(1.0, 0.0, 0.0)
+        camera.up = SIMD3<Float>(0.0, 1.0, 0.0)
+        
+        let fieldOfView = 45.0 * (Float.pi / 180.0)
+        let aspectRatio = Renderer.AspectRatio
+        let imagePlaneHeight = tanf(fieldOfView / 2.0)
+        let imagePlaneWidth = aspectRatio * imagePlaneHeight
+        
+        camera.right *= imagePlaneWidth
+        camera.up *= imagePlaneHeight
+        
+        var light = AreaLight()
+        light.position = SIMD3<Float>(40.0, 40.0, 40.0)
+        light.forward = SIMD3<Float>(0.0, -1.0, 0.0)
+        light.right = SIMD3<Float>(0.25, 0.0, 0.0)
+        light.up = SIMD3<Float>(0.0, 0.0, 0.25)
+        light.color = SIMD3<Float>(repeating: 10000)
+        
+        uniforms.pointee.camera = camera
+        uniforms.pointee.light = light
+        
+        uniforms.pointee.width = uint(Renderer.ScreenSize.x)
+        uniforms.pointee.height = uint(Renderer.ScreenSize.y)
+        uniforms.pointee.blocksWide = ((uniforms.pointee.width) + 15) / 16
+        uniforms.pointee.frameIndex = frameIndex
+        frameIndex += 1
+    }
+    
+    
+    func updateTransformBuffer()
+    {
+//        TODO: Only make if we have new children, else we can just reuse
+        transformBuffer = Engine.Device.makeBuffer(length: float4x4.stride(gameObjectCount))
+        let transformArray = transformBuffer.contents().bindMemory(to: float4x4.self, capacity: gameObjectCount)
+        
+        var i = 0
+        for child in children
+        {
+            if child is GameObject
+            {
+                transformArray[i] = child.modelMatrix
+                i += 1
+            }
+        }
+        
+        transformBuffer.label = "Transform Vertices"
+    }
+    
     func modifyVertices(commandBuffer: MTLCommandBuffer)
     {
         let kernelEncoder = commandBuffer.makeComputeCommandEncoder()!
@@ -468,6 +452,28 @@ class Scene: Apex
         blitEncoder.endEncoding()
         
     }
+    
+    func rebuildAccelerationStructure(commandBuffer: MTLCommandBuffer, completeHandler: @escaping  () -> Void)
+    {
+        updateTransformBuffer()
+        
+        modifyVertices(commandBuffer: commandBuffer)
+        
+        commandBuffer.addCompletedHandler({ _ in
+            for child in self.children
+            {
+                if let obj = child as? GameObject
+                {
+                    obj._accelerationStructure.vertexBuffer = self._vertexBuffer
+                    obj._accelerationStructure.rebuild()
+                }
+            }
+            self.accelerationStructure.rebuild()
+            completeHandler()
+            self.semaphore.signal()
+        })
+    }
+    
     
     func createRays(_ commandBuffer: MTLCommandBuffer)
     {
@@ -507,8 +513,6 @@ class Scene: Apex
 //        MARK: Start Raytracing
         intersector.label = "First Ray Trace"
         intersector?.intersectionDataType = .distancePrimitiveIndexInstanceIndexCoordinates
-        intersector?.intersectionStride = intersectionStride
-        intersector?.cullMode = .back
         intersector?.encodeIntersection(commandBuffer: commandBuffer,
                                         intersectionType: .nearest,
                                         rayBuffer: rayBuffer,
@@ -564,7 +568,6 @@ class Scene: Apex
         
         intersector?.label = "Shadows Intersector"
         intersector?.intersectionDataType = .distance
-        intersector?.intersectionStride = SIMD3<Float>.stride
         intersector?.encodeIntersection(
                         commandBuffer: commandBuffer,
                         intersectionType: .any,

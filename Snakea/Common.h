@@ -117,6 +117,7 @@ typedef struct Sphere
 
 typedef struct ShaderMesh
 {
+    uint32_t vertexCount;
     constant VertexColourData* generics;
     constant float3* normals;
     constant float3* positions;
@@ -138,6 +139,7 @@ struct Ray {
 
 typedef struct ShaderMesh
 {
+    uint32_t vertexCount;
     uint64_t generics;
     uint64_t normals;
     uint64_t positions;
