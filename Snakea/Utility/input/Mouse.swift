@@ -17,6 +17,9 @@ class Mouse {
     private static var lastWheelPosition: Float = 0.0
     private static var scrollWheelChange: Float = 0.0
     
+    public static var DX: Float = 0.0
+    public static var DY: Float = 0.0
+    
     public static func SetMouseButtonPressed(button: Int, isOn: Bool){
         mouseButtonList[button] = isOn
     }
@@ -52,18 +55,12 @@ class Mouse {
         return -position
     }
     
-    ///Movement on the y axis since last time getDY() was called.
-    public static func GetDY()->Float{
-        let result = mousePositionDelta.y
+    public static func UpdateDX(){
+        DY = mousePositionDelta.y
         mousePositionDelta.y = 0
-        return result
-    }
-    
-    ///Movement on the x axis since last time getDX() was called.
-    public static func GetDX()->Float{
-        let result = mousePositionDelta.x
+  
+        DX = mousePositionDelta.x
         mousePositionDelta.x = 0
-        return result
     }
     
     //Returns the mouse position in screen-view coordinates [-1, 1]

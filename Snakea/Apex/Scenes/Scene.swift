@@ -12,8 +12,7 @@ import MetalPerformanceShaders
 class Scene: Apex
 {
     var cameraManager: CameraManager = CameraManager()
-    var sceneConstants = SceneConstants()
-    
+    var light: Light = Light()
     var jointMatrices: [float4x4] = []
     
     var transformPipeline: MTLComputePipelineState!
@@ -296,14 +295,6 @@ class Scene: Apex
         }
     }
     
-    func updateSceneConstants()
-    {
-        self.sceneConstants.viewMatrix = cameraManager.currentCamera.viewMatrix
-        self.sceneConstants.projectionMatrix = cameraManager.currentCamera.projectionMatrix
-        self.sceneConstants.totalGameTime = GameTime.TotalGameTime
-    }
-    
-
     func updateRandomBuffer()
     {
         randomBufferOffset = 256 * SIMD2<Float>.stride * rayDataBufferIndex
@@ -364,30 +355,9 @@ class Scene: Apex
         let pointer = rayDataBuffer!.contents().advanced(by: rayDataBufferOffset)
         let uniforms = pointer.bindMemory(to: RayData.self, capacity: 1)
         
-        var camera = CameraToShader()
-//        camera.position = cameraManager.currentCamera.getPosition()
-        camera.position = SIMD3<Float>(0.0, 0.0, 80.0)
-        camera.forward = SIMD3<Float>(0.0, 0.0, -1.0)
-        camera.right = SIMD3<Float>(1.0, 0.0, 0.0)
-        camera.up = SIMD3<Float>(0.0, 1.0, 0.0)
-        
-        let fieldOfView = 45.0 * (Float.pi / 180.0)
-        let aspectRatio = Renderer.AspectRatio
-        let imagePlaneHeight = tanf(fieldOfView / 2.0)
-        let imagePlaneWidth = aspectRatio * imagePlaneHeight
-        
-        camera.right *= imagePlaneWidth
-        camera.up *= imagePlaneHeight
-        
-        var light = AreaLight()
-        light.position = SIMD3<Float>(40.0, 40.0, 40.0)
-        light.forward = SIMD3<Float>(0.0, -1.0, 0.0)
-        light.right = SIMD3<Float>(0.25, 0.0, 0.0)
-        light.up = SIMD3<Float>(0.0, 0.0, 0.25)
-        light.color = SIMD3<Float>(repeating: 10000)
-        
-        uniforms.pointee.camera = camera
-        uniforms.pointee.light = light
+   
+        uniforms.pointee.camera = cameraManager.currentCamera.shaderCamera
+        uniforms.pointee.light = light.areaLight
         
         uniforms.pointee.width = uint(Renderer.ScreenSize.x)
         uniforms.pointee.height = uint(Renderer.ScreenSize.y)
@@ -395,7 +365,6 @@ class Scene: Apex
         uniforms.pointee.frameIndex = frameIndex
         frameIndex += 1
     }
-    
     
     func updateTransformBuffer()
     {
@@ -473,7 +442,6 @@ class Scene: Apex
             self.semaphore.signal()
         })
     }
-    
     
     func createRays(_ commandBuffer: MTLCommandBuffer)
     {

@@ -113,6 +113,12 @@ typedef struct Sphere
     float radius;
 } Sphere;
 
+typedef struct Attractor
+{
+    vector_float3 position;
+    float mass;
+} Attractor;
+
 #if __METAL_VERSION__
 
 typedef struct ShaderMesh

@@ -61,16 +61,6 @@ kernel void shadeKernel(uint2 tid [[thread_position_in_grid]],
         if (ray.maxDistance >= 0.0 && intersection.distance >= 0.0) {
 
             ShaderMesh mesh = meshes[intersection.instanceIndex];
-
-            
-//            uint i = 0;
-//
-//            while (i < intersection.instanceIndex)
-//            {
-//                intersection.primitiveIndex -= (meshes[i].vertexCount / 3.0 );
-//                i++;
-//            }
-//
             
             uint offset = 0;
             uint i = 0;

@@ -12,6 +12,7 @@
 		2A008BCB29399484005E4EBC /* grass.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A008BC629399484005E4EBC /* grass.png */; };
 		2A008BCC29399484005E4EBC /* dirt2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A008BC729399484005E4EBC /* dirt2.png */; };
 		2A008BCE2939974B005E4EBC /* planet.obj in Resources */ = {isa = PBXBuildFile; fileRef = 2A008BCD2939974B005E4EBC /* planet.obj */; };
+		2A0D1B6A299C759300624B89 /* AttractorObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D1B69299C759300624B89 /* AttractorObject.swift */; };
 		2A16D3342909EF4100E1C34F /* KernelUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A16D3332909EF4100E1C34F /* KernelUpdate.swift */; };
 		2A3340CC29774BF2001EFAE0 /* cactus00_mtl.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A3340C629774BF2001EFAE0 /* cactus00_mtl.png */; };
 		2A3340CD29774BF2001EFAE0 /* cactus00_rgh.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A3340C729774BF2001EFAE0 /* cactus00_rgh.png */; };
@@ -23,7 +24,6 @@
 		2A6BBFAA29077D6500508667 /* ModelLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BBFA929077D6500508667 /* ModelLoader.swift */; };
 		2A6BBFAD29077E4B00508667 /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BBFAC29077E4B00508667 /* Scene.swift */; };
 		2A6BBFAF29077E6400508667 /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BBFAE29077E6400508667 /* Camera.swift */; };
-		2A6BBFB129077FA200508667 /* StaticCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BBFB029077FA200508667 /* StaticCamera.swift */; };
 		2A6DD46029075821001FFC51 /* GameObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DD45F29075821001FFC51 /* GameObject.swift */; };
 		2A6DD4642907597F001FFC51 /* ModelLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DD4632907597F001FFC51 /* ModelLibrary.swift */; };
 		2A6DD46929075D06001FFC51 /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DD46829075D06001FFC51 /* Animation.swift */; };
@@ -55,9 +55,12 @@
 		2A9EA37D2909FDF8006B858F /* Basic.metal in Sources */ = {isa = PBXBuildFile; fileRef = 2A9EA37C2909FDF8006B858F /* Basic.metal */; };
 		2A9EA382290A0072006B858F /* Level1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9EA381290A0072006B858F /* Level1.swift */; };
 		2AB433BE2919F1CB000046B6 /* VertexDescriptorLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB433BD2919F1CB000046B6 /* VertexDescriptorLibrary.swift */; };
+		2ABDABCF299C6600005F12F3 /* Light.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABDABCE299C6600005F12F3 /* Light.swift */; };
 		2AC93573298A0F0200010D5E /* Collision.metal in Sources */ = {isa = PBXBuildFile; fileRef = 2AC93572298A0F0200010D5E /* Collision.metal */; };
 		2ADD3799291636890022BB24 /* common.metal in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD3798291636890022BB24 /* common.metal */; };
 		2AE63AAB2951600B00FA42A0 /* TexturePacker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE63AAA2951600B00FA42A0 /* TexturePacker.swift */; };
+		2AED8D04299B4DC1002FEF23 /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AED8D03299B4DC1002FEF23 /* Level.swift */; };
+		2AED8D06299B5396002FEF23 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AED8D05299B5396002FEF23 /* Entity.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +69,7 @@
 		2A008BC629399484005E4EBC /* grass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grass.png; sourceTree = "<group>"; };
 		2A008BC729399484005E4EBC /* dirt2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dirt2.png; sourceTree = "<group>"; };
 		2A008BCD2939974B005E4EBC /* planet.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = planet.obj; sourceTree = "<group>"; };
+		2A0D1B69299C759300624B89 /* AttractorObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttractorObject.swift; sourceTree = "<group>"; };
 		2A16D3332909EF4100E1C34F /* KernelUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KernelUpdate.swift; sourceTree = "<group>"; };
 		2A3340C629774BF2001EFAE0 /* cactus00_mtl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cactus00_mtl.png; sourceTree = "<group>"; };
 		2A3340C729774BF2001EFAE0 /* cactus00_rgh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cactus00_rgh.png; sourceTree = "<group>"; };
@@ -77,7 +81,6 @@
 		2A6BBFA929077D6500508667 /* ModelLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelLoader.swift; sourceTree = "<group>"; };
 		2A6BBFAC29077E4B00508667 /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
 		2A6BBFAE29077E6400508667 /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
-		2A6BBFB029077FA200508667 /* StaticCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticCamera.swift; sourceTree = "<group>"; };
 		2A6DD45F29075821001FFC51 /* GameObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameObject.swift; sourceTree = "<group>"; };
 		2A6DD4632907597F001FFC51 /* ModelLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelLibrary.swift; sourceTree = "<group>"; };
 		2A6DD46829075D06001FFC51 /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
@@ -112,9 +115,12 @@
 		2A9EA37C2909FDF8006B858F /* Basic.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Basic.metal; sourceTree = "<group>"; };
 		2A9EA381290A0072006B858F /* Level1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Level1.swift; sourceTree = "<group>"; };
 		2AB433BD2919F1CB000046B6 /* VertexDescriptorLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VertexDescriptorLibrary.swift; sourceTree = "<group>"; };
+		2ABDABCE299C6600005F12F3 /* Light.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Light.swift; sourceTree = "<group>"; };
 		2AC93572298A0F0200010D5E /* Collision.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Collision.metal; sourceTree = "<group>"; };
 		2ADD3798291636890022BB24 /* common.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = common.metal; sourceTree = "<group>"; };
 		2AE63AAA2951600B00FA42A0 /* TexturePacker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TexturePacker.swift; sourceTree = "<group>"; };
+		2AED8D03299B4DC1002FEF23 /* Level.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Level.swift; sourceTree = "<group>"; };
+		2AED8D05299B5396002FEF23 /* Entity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +147,16 @@
 			path = galaxyHolePlanet;
 			sourceTree = "<group>";
 		};
+		2A0D1B68299C757300624B89 /* GameObjects */ = {
+			isa = PBXGroup;
+			children = (
+				2A6DD45F29075821001FFC51 /* GameObject.swift */,
+				2AED8D05299B5396002FEF23 /* Entity.swift */,
+				2A0D1B69299C759300624B89 /* AttractorObject.swift */,
+			);
+			path = GameObjects;
+			sourceTree = "<group>";
+		};
 		2A16D32D2909EE0100E1C34F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -154,7 +170,6 @@
 			isa = PBXGroup;
 			children = (
 				2A6BBFAE29077E6400508667 /* Camera.swift */,
-				2A6BBFB029077FA200508667 /* StaticCamera.swift */,
 				2A817EC82908EBC90071C932 /* CameraManager.swift */,
 			);
 			path = Camera;
@@ -247,11 +262,12 @@
 		2A825F46290639DA00FE2CDA /* Apex */ = {
 			isa = PBXGroup;
 			children = (
+				2A0D1B68299C757300624B89 /* GameObjects */,
 				2A9EA383290A0075006B858F /* Scenes */,
 				2A16D3322909EE5500E1C34F /* Camera */,
 				2A825F47290639F700FE2CDA /* Apex.swift */,
-				2A6DD45F29075821001FFC51 /* GameObject.swift */,
 				2A16D3332909EF4100E1C34F /* KernelUpdate.swift */,
+				2ABDABCE299C6600005F12F3 /* Light.swift */,
 			);
 			path = Apex;
 			sourceTree = "<group>";
@@ -295,6 +311,7 @@
 			children = (
 				2A9EA37A2909FA6F006B858F /* SceneManager.swift */,
 				2A6BBFAC29077E4B00508667 /* Scene.swift */,
+				2AED8D03299B4DC1002FEF23 /* Level.swift */,
 				2A9EA381290A0072006B858F /* Level1.swift */,
 			);
 			path = Scenes;
@@ -402,7 +419,6 @@
 				2A6DD47029075D31001FFC51 /* AnimationClip.swift in Sources */,
 				2A825F5329063BA400FE2CDA /* MetalTypes.swift in Sources */,
 				2A9EA37B2909FA6F006B858F /* SceneManager.swift in Sources */,
-				2A6BBFB129077FA200508667 /* StaticCamera.swift in Sources */,
 				2A9EA37D2909FDF8006B858F /* Basic.metal in Sources */,
 				2A16D3342909EF4100E1C34F /* KernelUpdate.swift in Sources */,
 				2A825F5829063BA400FE2CDA /* Time.swift in Sources */,
@@ -410,14 +426,18 @@
 				2A6DD46C29075D21001FFC51 /* Skeleton.swift in Sources */,
 				2A825F5629063BA400FE2CDA /* Mouse.swift in Sources */,
 				2A6BBFAF29077E6400508667 /* Camera.swift in Sources */,
+				2A0D1B6A299C759300624B89 /* AttractorObject.swift in Sources */,
 				2A825F322906338B00FE2CDA /* AppDelegate.swift in Sources */,
 				2AC93573298A0F0200010D5E /* Collision.metal in Sources */,
 				2A825F412906347C00FE2CDA /* Preferences.swift in Sources */,
+				2AED8D06299B5396002FEF23 /* Entity.swift in Sources */,
 				2A6DD47D29076555001FFC51 /* TextureLibrary.swift in Sources */,
 				2A6DD47229075D3E001FFC51 /* AnimationComponent.swift in Sources */,
+				2ABDABCF299C6600005F12F3 /* Light.swift in Sources */,
 				2A825F5729063BA400FE2CDA /* Keyboard.swift in Sources */,
 				2AE63AAB2951600B00FA42A0 /* TexturePacker.swift in Sources */,
 				2A825F45290637A300FE2CDA /* Engine.swift in Sources */,
+				2AED8D04299B4DC1002FEF23 /* Level.swift in Sources */,
 				2A817EC92908EBC90071C932 /* CameraManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

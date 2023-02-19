@@ -19,9 +19,9 @@ class TexturePacker
         var positions: [SIMD2<Int>] = []
         
         var ok: Bool = true
-        for size in sizes
+        for imgSize in sizes
         {
-            let rect = insert(w: size.x, h: size.y, ok: &ok)
+            let rect = insert(w: imgSize.x, h: imgSize.y, ok: &ok)
             if (!ok) {
                 print("Unable to fit size \(size)")
                 return nil

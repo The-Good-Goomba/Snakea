@@ -55,7 +55,7 @@ class TextureLibrary {
         var size = 128
         
         repeat {
-            size *= 2
+            size += 128
             positions = packer.createAtlas(sizes: sizes, size: SIMD2<Int>(size,size))
         } while ( positions == nil )
      

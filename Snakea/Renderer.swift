@@ -42,7 +42,7 @@ extension Renderer: MTKViewDelegate
 //        destination is developerTools by default
 //        try? MTLCaptureManager.shared().startCapture(with: captureDescriptor)
 
-        
+        Mouse.UpdateDX()
         SceneManager.doUpdate( view: view, deltaTime: 1 / Float(view.preferredFramesPerSecond))
         
 //        if MTLCaptureManager.shared().isCapturing {
