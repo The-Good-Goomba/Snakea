@@ -27,8 +27,8 @@ class Level: Scene
                 {
                     if let entity = obj as? Entity
                     {
-                
-                        entity.acceleration += gravitationConstant * (attractor.mass/distance_squared(attractor.getPosition(), entity.getPosition()))
+                        let distSq = distance_squared(attractor.getPosition(), entity.getPosition())
+                        entity.acceleration += (gravitationConstant * (attractor.mass/distSq)) * (attractor.getPosition() - entity.getPosition()) * simd_rsqrt(distSq)
                     }
                 }
             }
