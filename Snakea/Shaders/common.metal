@@ -12,6 +12,13 @@ using namespace metal;
 
 using Intersection = MPSIntersectionDistancePrimitiveIndexInstanceIndexCoordinates;
 
+struct ModArgVector
+{
+    float magnitude;
+    float zAngle;
+    float xyAngle;
+};
+
 // Interpolates vertex attribute of an arbitrary type across the surface of a triangle
 // given the barycentric coordinates and triangle index in an intersection struct
 template<typename T> inline T interpolateVertexAttribute(constant T *attributes, Intersection intersection) {
@@ -121,3 +128,46 @@ inline float3 alignHemisphereWithNormal(float3 sample, float3 normal) {
   return sample.x * right + sample.y * up + sample.z * forward;
 }
 
+inline ModArgVector vectorToEuler(float3 input)
+{
+    ModArgVector output;
+    output.magnitude = fast::sqrt(input.x * input.x + input.y * input.y + input.z * input.z);
+    output.xyAngle = fast::atan(input.y / input.x);
+    output.zAngle = fast::acos(input.z / output.magnitude);
+    
+    return output;
+}
+
+inline float magnitude(float3 input)
+{
+    return fast::sqrt(input.x * input.x + input.y * input.y + input.z * input.z);
+}
+inline float magnitude(float2 input)
+{
+    return fast::sqrt(input.x * input.x + input.y * input.y);
+}
+
+inline float angle(float3 input1, float3 input2)
+{
+    return fast::acos(dot(input1, input2)/(magnitude(input1)*magnitude(input2)));
+}
+
+inline float angle(float2 input1, float2 input2)
+{
+    return fast::acos(dot(input1, input2)/(magnitude(input1)*magnitude(input2)));
+}
+
+inline bool pointIsAboveLine(float2 v1, float2 v2, float2 p)
+{
+//    float m = (v1.y - v2.y)/(v1.x - v2.x);
+//
+//    if ((p.y - v1.y) >= m * (p.x - v1.x))
+//    {
+//        return true;
+//    }
+    if ((p.y - v1.y) * (v1.x - v2.x) - (v1.y - v2.y) * (p.x - v1.x) >= 0 )
+    {
+        return true;
+    }
+    return false;
+}

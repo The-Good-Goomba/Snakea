@@ -128,12 +128,12 @@ kernel void shadowKernel(uint2 tid [[thread_position_in_grid]],
         unsigned int rayIdx = tid.y * uniforms.width + tid.x;
         device Ray & shadowRay = shadowRays[rayIdx];
         float intersectionDistance = intersections[rayIdx];
-            if (shadowRay.maxDistance >= 0.0
-                  && intersectionDistance <= 0.0) {
-              half3 colour = shadowRay.colour;
-              colour += renderTarget.read(tid).xyz;
-              renderTarget.write(half4(colour, 1.0), tid);
-            }
+        if (shadowRay.maxDistance >= 0.0
+              && intersectionDistance <= 0.0) {
+            half3 colour = shadowRay.colour;
+            colour += renderTarget.read(tid).xyz;
+            renderTarget.write(half4(colour, 1.0), tid);
+        }
     }
 }
 

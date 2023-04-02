@@ -121,6 +121,14 @@ typedef struct Attractor
 
 #if __METAL_VERSION__
 
+// Maybe add position to this
+typedef struct collisionBufferObject
+{
+    uint32_t triangleCount;
+    constant float3* normals;
+    constant float3* vertices;
+} collisionBufferObject;
+
 typedef struct ShaderMesh
 {
     uint32_t vertexCount;
@@ -142,6 +150,13 @@ struct Ray {
 
 #import <Metal/Metal.h>
 #import <Foundation/Foundation.h>
+
+typedef struct collisionBufferObject
+{
+    uint32_t triangleCount;
+    uint64_t normals;
+    uint64_t vertices;
+} collisionBufferObject;
 
 typedef struct ShaderMesh
 {

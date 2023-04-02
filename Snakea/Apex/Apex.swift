@@ -54,10 +54,9 @@ class Apex
     
     func updateModelMatrix()
     {
-        let translationMatrix = float4x4(translation: self._position)
+        let translationMatrix = float4x4(translation: _position)
         let scaleMatrix = float4x4(scaling: _scale)
         let rotationMatrix = float4x4(_quarternion)
-        
         self._modelMatrix = translationMatrix * rotationMatrix * scaleMatrix
     }
     
@@ -95,9 +94,8 @@ extension Apex
     func setPosition(_ pos: SIMD3<Float>)
     {
         self._position = pos
-        afterTranslation()
-        
         updateModelMatrix()
+        afterTranslation()
     }
     
     func setPosition(x: Float, y: Float, z: Float)
@@ -112,7 +110,6 @@ extension Apex
     func move(_ amount: SIMD3<Float>)
     {
         setPosition(getPosition() + amount)
-        updateModelMatrix()
     }
     
     func moveX(x: Float) { move([x,0,0]) }
@@ -133,8 +130,8 @@ extension Apex
         let rotationMat = float4x4(rotation: _rotation)
         self._quarternion = simd_quatf(rotationMat)
         
-        afterRotation()
         updateModelMatrix()
+        afterRotation()
     }
     
     func setRotation(x: Float, y: Float, z: Float)
@@ -163,9 +160,10 @@ extension Apex
 //    Scale
     func setScale(_ scale: SIMD3<Float>)
     {
+        print(scale)
         self._scale = scale
-        afterScale()
         updateModelMatrix()
+        afterScale()
     }
     
     func setScale(x: Float, y: Float, z: Float)
@@ -179,12 +177,12 @@ extension Apex
     
     func scale(_ amount: SIMD3<Float>)
     {
-        setPosition(getPosition() * amount)
+        setScale(getScale() * amount)
     }
     
-    func scaleX(x: Float) { scale([x,0,0]) }
-    func scaleY(y: Float) { scale([0,y,0]) }
-    func scaleZ(z: Float) { scale([0,0,z]) }
+    func scaleX(x: Float) { scale([x,1,1]) }
+    func scaleY(y: Float) { scale([1,y,1]) }
+    func scaleZ(z: Float) { scale([1,1,z]) }
     
     func getScale() -> SIMD3<Float>{ return self._scale }
     func getScaleX() -> Float { return self._scale.x }

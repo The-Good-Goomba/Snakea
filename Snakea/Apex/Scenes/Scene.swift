@@ -65,6 +65,7 @@ class Scene: Apex
     var meshBuffer: MTLBuffer!
     
     var _vertexBuffer: MTLBuffer!
+    var triangleCount: Int!
     
     init()
     {
@@ -213,7 +214,7 @@ class Scene: Apex
         self.accelerationStructure.instanceBuffer = _instanceBuffer
         self.accelerationStructure.usage = .frequentRebuild
         self.accelerationStructure.accelerationStructures = triangleAccelerationStrutures
-        
+        self.triangleCount = vertexBufferOffset / 3
     }
     
     func updateScreenSize()
@@ -377,7 +378,8 @@ class Scene: Apex
         {
             if child is GameObject
             {
-                transformArray[i] = child.modelMatrix
+//                transformArray[i] = child.modelMatrix
+                transformArray[i] = .identity()
                 i += 1
             }
         }
@@ -424,7 +426,7 @@ class Scene: Apex
     
     func rebuildAccelerationStructure(commandBuffer: MTLCommandBuffer, completeHandler: @escaping  () -> Void)
     {
-        updateTransformBuffer()
+//        updateTransformBuffer()
         
         modifyVertices(commandBuffer: commandBuffer)
         

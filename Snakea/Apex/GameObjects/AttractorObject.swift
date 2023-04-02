@@ -7,6 +7,6 @@
 
 class AttractorObject: GameObject
 {
-    var mass: Float = 100.0
+    var mass: Float = 100000.0
     
 }

@@ -22,21 +22,26 @@ class Level1: Level
         addCamera(cam)
         addChild(planet)
         addChild(cactus)
-        cactus.setUniformScale(0.3)
+        cactus.setUniformScale(0.01)
         
-        cactus.setPosition(x: 0.0, y: 10.0, z: 0.0)
+        cactus.setPosition(x: 30.0, y: 0.0, z: 30.0)
+        cactus.velocity.y = -0.07
+        cactus.radius = 1.0
         
-        light.position = SIMD3<Float>(40.0, 0.0, 40.0)
+        light.position = SIMD3<Float>(50.0, 0.0, 50.0)
         light.colour = SIMD3<Float>(repeating: 10000)
         light.rotation.y = -.pi/2.0
 
+        
+        cam.position = [50.0, 0.0, 50.0]
     }
     
     override func doUpdate() {
         
         if (Mouse.IsMouseButtonPressed(button: .left))
         {
-            cam.rotation.y +=  Mouse.DX * 0.002
+            cam.yaw +=  Mouse.DX * 0.002
+            cam.pitch -=  Mouse.DY * 0.002
         }
         if (Keyboard.IsKeyPressed(.a))
         {
@@ -54,7 +59,9 @@ class Level1: Level
         {
             cam.position.z += 0.5
         }
+        print(cactus.getPosition())
         
+        cam.position.y += Mouse.GetDWheel()
         super.doUpdate()
     }
     
